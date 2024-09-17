@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datepicker Form</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+        /* Basic reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            background-color: #FFC2C2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Container Styling */
+        .form-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+            max-width: 550px;
+            width: 100%;
+        }
+
+        /* Title */
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #8B0000;
+            font-weight: 600;
+            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        h3 {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            text-align: center;
+            font-weight: 400;
+        }
+
+        /* Form Styling */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        label {
+            font-size: 1.1em;
+            color: #333;
+            font-weight: 600;
+        }
+
+        /* Input fields */
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            background-color: #f9f9f9;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #8B0000;
+            outline: none;
+        }
+
+        /* Slot options */
+        .time-slot {
+            display: flex;
+            gap: 15px;
+        }
+
+        .time-slot label {
+            font-size: 1em;
+            color: black;
+            font-weight: 400;
+        }
+
+        .time-select {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        /* Submit button */
+        #submit-button {
+            text-align: center;
+        }
+
+        button {
+            padding: 14px 40px;
+            background-color: #8B0000;
+            color: white;
+            border: none;
+            border-radius: 0px;
+            font-size: 1.2em;
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #b22222;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 30px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            button {
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h1>Leave Request</h1>
+        <h3><strong>Select your leave dates and time slots</strong></h3>
+
+        <form id="date-form" action="/submitN" method="post">
+            <!-- Start Date and Slots -->
+            <div class="form-section">
+                <label for="start_date"><strong>Start Date:</strong></label>
+                <input type="text" id="start_date" name="startdate" required>
+
+                <div class="time-select">
+                    <label><strong>Start Slot:</strong></label>
+                    <div class="time-slot">
+                        <input type="radio" id="start_morning" name="startslot" value="morning" required>
+                        <label for="start_morning">Morning</label>
+                    </div>
+                    <div class="time-slot">
+                        <input type="radio" id="start_afternoon" name="startslot" value="afternoon">
+                        <label for="start_afternoon">Afternoon</label>
+                    </div>
+                    <div class="time-slot">
+                        <input type="radio" id="start_evening" name="startslot" value="evening">
+                        <label for="start_evening">Evening</label>
+                    </div>
+                    <div class="time-slot">
+                        <input type="radio" id="start_night" name="startslot" value="night">
+                        <label for="start_night">Night</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- End Date and Slots -->
+            <div class="form-section">
+                <label for="end_date"><strong>End Date:</strong></label>
+                <input type="text" id="end_date" name="enddate" required>
+
+                <div class="time-select">
+                    <label><strong>End Slot:</strong></label>
+                    <div class="time-slot">
+                        <input type="radio" id="end_morning" name="endslot" value="morning" required>
+                        <label for="end_morning">Morning</label>
+                    </div>
+                    <div class="time-slot">
+                        <input type="radio" id="end_afternoon" name="endslot" value="afternoon">
+                        <label for="end_afternoon">Afternoon</label>
+                    </div>
+                    <div class="time-slot">
+                        <input type="radio" id="end_evening" name="endslot" value="evening">
+                        <label for="end_evening">Evening</label>
+                    </div>
+                    <div class="time-slot">
+                        <input type="radio" id="end_night" name="endslot" value="night">
+                        <label for="end_night">Night</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div id="submit-button">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(function() {
+            var today = new Date();
+
+            // Initialize datepickers with date format and minDate
+            $("#start_date, #end_date").datepicker({
+                dateFormat: 'yy-mm-dd',
+                minDate: today
+            });
+
+            // Validate form to ensure end date is not before start date
+            $("#date-form").on("submit", function (e) {
+                const startDate = new Date($("#start_date").val());
+                const endDate = new Date($("#end_date").val());
+
+                if (endDate < startDate) {
+                    e.preventDefault();
+                    alert("End date cannot be before start date.");
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

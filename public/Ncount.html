@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.21/jspdf.plugin.autotable.min.js"></script>
+<title>Hostel Management</title>
+    <link rel="shortcut icon" href="https://www.tce.edu/sites/default/files/favicon.ico" type="image/x-icon">
+
+
+    <style>
+         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            padding: 0px;
+            color: #333;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Header styling */
+        header {
+            background-color: #8B0000;
+            color: #ffffff;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+           
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        header img {
+            max-height: 60px;
+        }
+        header h1 {
+            font-size: 28px;
+            margin: 0;
+            flex: 1;
+            text-align: left;
+        }
+
+        /* Footer styling */
+        footer {
+            background-color: #8B0000;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        /* Main content styles */
+        h2 {
+            color: #8B0000;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 18px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* Button styling */
+        button {
+            background-color: #8B0000;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 0px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #a10000;
+        }
+
+        /* Additional styles for smaller screens */
+        @media (max-width: 600px) {
+            button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+
+        table {
+            width: 80%;
+            max-width: 1000px;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        th {
+            background-color: #e2e3e5;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #eef1f7;
+        }
+
+        /* Slot availability classes */
+.available {
+    background-color: #FFC2C2; /* Changed to pink shade */
+    color: #721c24; /* Adjust the text color if needed for better contrast */
+}
+
+.full {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.low-availability {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+        /* Responsive table styling */
+        @media (max-width: 600px) {
+            table, th, td {
+                font-size: 14px;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header><img src="https://www.tce.edu/sites/default/files/favicon.ico" alt="TCE Logo">
+
+        <h1>Thiagarajar College of Engineering Ladies Hostel - Admin Slot Management</h1>
+    </header>
+
+    <h2>Presence of Students for Selected Month</h2>
+
+    <label for="month">Select Month:</label>
+    <input type="month" id="month" name="month" required>
+    <button onclick="fetchData()">Fetch Count</button><button id="downloadPdf">Download as PDF</button>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th><th>Textual Date</th>
+                <th>Morning</th>
+                <th>Afternoon</th>
+                <th>Evening</th>
+                <th>Night</th>
+            </tr>
+        </thead>
+        <tbody id="results-table">
+            <!-- Results will be inserted here -->
+        </tbody>
+    </table>
+<footer>
+        <p>&copy; 2024 Thiagarajar College of Engineering. All Rights Reserved.</p>
+    </footer>
+
+
+    <script>
+
+document.getElementById("downloadPdf").addEventListener("click", function() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Get the selected month
+    const monthInput = document.getElementById("month").value;
+    if (!monthInput) {
+        alert("Please select a month.");
+        return;
+    }
+
+    // Set title for the PDF
+    doc.setFontSize(20);
+    doc.text(`Student Slot Availability - ${monthInput}`, 10, 10);
+    doc.setFontSize(12);
+
+    // Extract table data
+    const table = document.querySelector('table');
+    const rows = table.querySelectorAll('tr');
+    
+    // Prepare table data for autoTable
+    const headers = [['Date', 'Textual Date', 'Morning', 'Afternoon', 'Evening', 'Night']];  // Table headers
+    const body = [];
+
+    rows.forEach(function(row, index) {
+        if (index === 0) return; // Skip the header row
+        const cells = row.querySelectorAll('td');
+        const rowData = Array.from(cells).map(cell => cell.textContent.trim());
+        body.push(rowData);
+    });
+
+    // Add table to the PDF using autoTable
+    doc.autoTable({
+        head: headers,
+        body: body,
+        startY: 30,
+        theme: 'grid',
+        headStyles: {
+            fillColor: [224, 224, 224],
+            textColor: [0, 0, 0],
+            fontStyle: 'bold'
+        },
+        bodyStyles: {
+            textColor: [50, 50, 50],
+        },
+        styles: {
+            fontSize: 12,
+            cellPadding: 6,
+            lineColor: [200, 200, 200],
+            lineWidth: 0.5
+        }
+    });
+
+    // Save the PDF
+    doc.save(`student_slot_availability_${monthInput}.pdf`);
+});
+
+        function fetchData() {
+            const monthInput = document.getElementById("month").value;
+            if (!monthInput) {
+                alert("Please select a month.");
+                return;
+            }
+
+            const [year, month] = monthInput.split('-');
+
+            fetch(`/api/slothostel3?month=${month}&year=${year}`)
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById("results-table");
+                    tableBody.innerHTML = '';  // Clear any existing data
+
+                    // Sort data by date
+                    data.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+                    data.forEach(row => {
+    let rowElement = document.createElement("tr");
+
+    // Format numerical and textual date
+    const dateObj = new Date(row.date);
+    const day = String(dateObj.getDate()).padStart(2, '0'); // Ensure two digits for day
+    const monthNum = String(dateObj.getMonth() + 1).padStart(2, '0'); // Ensure two digits for month
+    const yearFull = dateObj.getFullYear();
+
+    const numericalDate = `${day}.${monthNum}.${yearFull}`;
+
+    // Get the ordinal suffix
+    const ordinalSuffix = getOrdinalSuffix(parseInt(day, 10));
+    const monthName = dateObj.toLocaleString('default', { month: 'long' });
+
+    // Get the full day of the week
+    const dayOfWeek = dateObj.toLocaleDateString('default', { weekday: 'long' });
+
+    // Create the textual date with day of the week
+    const textualDate = `${dayOfWeek}`;
+
+    // Apply classes based on slot availability
+    const morningClass = row.morning === 0 ? 'full' : row.morning <= 5 ? 'low-availability' : 'available';
+    const afternoonClass = row.afternoon === 0 ? 'full' : row.afternoon <= 5 ? 'low-availability' : 'available';
+    const eveningClass = row.evening === 0 ? 'full' : row.evening <= 5 ? 'low-availability' : 'available';
+    const nightClass = row.night === 0 ? 'full' : row.night <= 5 ? 'low-availability' : 'available';
+
+    rowElement.innerHTML = 
+        `<td>${numericalDate}</td>
+        <td>${textualDate}</td>
+        <td class="${morningClass}">${row.morning}</td>
+        <td class="${afternoonClass}">${row.afternoon}</td>
+        <td class="${eveningClass}">${row.evening}</td>
+        <td class="${nightClass}">${row.night}</td>`;
+    tableBody.appendChild(rowElement);
+});
+                })
+                .catch(error => console.error('Error fetching slots data:', error));
+        }
+
+        // Function to get ordinal suffix for the day (e.g., "1st", "2nd", "3rd")
+        function getOrdinalSuffix(day) {
+            if (day > 3 && day < 21) return 'th'; // Covers 11th-13th
+            switch (day % 10) {
+                case 1: return "st";
+                case 2: return "nd";
+                case 3: return "rd";
+                default: return "th";
+            }
+        }
+    </script>
+</body>
+</html>

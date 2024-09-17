@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Women's Helpline</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ADC9E6;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .text-overlay {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: black;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .popup-button {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50; /* Green background */
+            color: white; /* White text */
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: none; /* Initially hidden */
+        }
+
+        /* Show the button when the body has a "show-popup" class */
+        body.show-popup .popup-button {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="helpline.jpg" alt="Women's Helpline">
+        <button class="popup-button">Successfully Submitted</button>
+        
+    </div>
+
+    <script>
+    // Show the popup after the page loads, and hide it after a delay (10 seconds)
+    window.onload = function() {
+        document.body.classList.add('show-popup');
+        setTimeout(function() {
+            document.body.classList.remove('show-popup');
+        }, 10000); // Hide popup after 10 seconds
+    };
+
+    // Prevent back navigation by redirecting to the login page
+    window.addEventListener('popstate', function(event) {
+        window.location.href = 'hostellogin.html'; // Redirect to the login page when the back button is pressed
+    });
+</script>
+
+    </script>
+</body>
+</html>
