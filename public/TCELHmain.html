@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Management</title>
+    <link rel="shortcut icon" href="https://www.tce.edu/sites/default/files/favicon.ico" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #8B0000;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 20px 40px;
+        }
+      
+        .header h1 {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 2.5em;
+        }
+        .content {
+            flex-grow: 1;
+            display: flex;
+            padding: 0 40px;
+            background-image: url('https://www.tce.edu/sites/default/files/2022-09/TCE-WH-05.jpeg');
+            background-size: cover;
+            background-position: center;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0); /* semi-transparent background */
+            border-radius: 10px;
+        }
+        .button-container button {
+            background-color: #8B0000;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease;
+        }
+        .button-container button:hover {
+            background-color: rgba(178, 34, 34, 0.9);
+        }
+        .info-container {
+            width: 50%;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8); /* semi-transparent background */
+            border-radius: 10px;
+        }
+        .info-container h2 {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+        .info-container p {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        footer {
+            background-color: #8B0000;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="https://www.tce.edu/sites/default/files/favicon.ico" alt="TCE Logo">
+        <h1>Thiagarajar College of Engineering Ladies Hostel</h1>
+    </div>
+
+    <div class="content">
+        <div class="button-container">
+            <button onclick="location.href='THostel_login.html'">Thirunagar Hostel</button><br>
+            <button onclick="location.href='NHostel_login.html'">New Hostel</button><br>
+            <button onclick="location.href='MHostel_login.html'">Main Hostel</button>
+        </div>
+        
+        <div class="info-container">
+            <h2>Welcome to the Hostel Food Management System</h2>
+            <p>This system provides solution for managing food counts and leave schedules in our hostels: Thirunagar Hostel, Main Hostel, and New Hostel. </p>
+
+            <p>View a calendar to mark dates when you'll be away from the hostel. The system records the start and end dates of your leave to calculate your absence.Based on your leave data, the system updates the total count of students present in the hostel each day. This real-time data helps in adjusting food preparation to avoid wastage.</p>
+            <p>Easily update your food requirements if you return earlier than expected. The system allows you to modify your food slot as needed.
+ Our primary goal is to minimize food wastage by accurately tracking the number of students present in the hostel and adjusting food preparation accordingly.
+</p>
+        </div>
+    </div>
+
+    <footer>
+        © 2024 Thiagarajar College of Engineering - Hostel Management
+    </footer>
+
+</body>
+</html>
