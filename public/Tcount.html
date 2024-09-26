@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.21/jspdf.plugin.autotable.min.js"></script>
-    <title>Hostel Management</title>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.21/jspdf.plugin.autotable.min.js"></script>
+<title>Hostel Management</title>
     <link rel="shortcut icon" href="https://www.tce.edu/sites/default/files/favicon.ico" type="image/x-icon">
+
+
     <style>
-        body {
+         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f4f9;
             padding: 0px;
@@ -158,18 +160,16 @@
     </style>
 </head>
 <body>
-    <header>
-        <img src="https://www.tce.edu/sites/default/files/favicon.ico" alt="TCE Logo">
-        <h1>Thiagarajar College of Engineering Ladies Hostel   -   Admin Slot Management</h1>
+    <header><img src="https://www.tce.edu/sites/default/files/favicon.ico" alt="TCE Logo">
+
+        <h1>Thiagarajar College of Engineering Ladies Hostel - Admin Slot Management</h1>
     </header>
 
     <h2>Presence of Students for Selected Month</h2>
 
     <label for="month">Select Month:</label>
-    <input type="month" id="month" name="month" max="2024-09" required>
-    <button onclick="fetchData()">Fetch Count</button>
-    <button id="downloadPdf">Download as PDF</button>
-
+    <input type="month" id="month" name="month" required>
+    <button onclick="fetchData()">Fetch Count</button><button id="downloadPdf">Download as PDF</button>
     <table>
         <thead>
             <tr>
@@ -184,119 +184,131 @@
             <!-- Results will be inserted here -->
         </tbody>
     </table>
-
-    <footer>
+<footer>
         <p>&copy; 2024 Thiagarajar College of Engineering. All Rights Reserved.</p>
     </footer>
 
+
     <script>
-        document.getElementById("downloadPdf").addEventListener("click", function() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
 
-            const monthInput = document.getElementById("month").value;
-            if (!monthInput) {
-                alert("Please select a month.");
-                return;
-            }
+document.getElementById("downloadPdf").addEventListener("click", function() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
 
-            doc.setFontSize(20);
-            doc.text(`Student Slot Availability - ${monthInput}`, 10, 10);
-            doc.setFontSize(12);
+    // Get the selected month
+    const monthInput = document.getElementById("month").value;
+    if (!monthInput) {
+        alert("Please select a month.");
+        return;
+    }
 
-            const table = document.querySelector('table');
-            const rows = table.querySelectorAll('tbody tr');
-            
-            const headers = [['Date', 'Textual Date', 'Morning', 'Afternoon', 'Evening', 'Night']];
-            const body = [];
+    // Set title for the PDF
+    doc.setFontSize(20);
+    doc.text(`Student Slot Availability - ${monthInput}`, 10, 10);
+    doc.setFontSize(12);
 
-            rows.forEach(function(row) {
-                const cells = row.querySelectorAll('td');
-                const rowData = Array.from(cells).map(cell => cell.textContent.trim());
-                body.push(rowData);
-            });
+    // Extract table data
+    const table = document.querySelector('table');
+    const rows = table.querySelectorAll('tr');
+    
+    // Prepare table data for autoTable
+    const headers = [['Date', 'Textual Date', 'Morning', 'Afternoon', 'Evening', 'Night']];  // Table headers
+    const body = [];
 
-            if (body.length === 0) {
-                alert("No data to export for the selected month.");
-                return;
-            }
+    rows.forEach(function(row, index) {
+        if (index === 0) return; // Skip the header row
+        const cells = row.querySelectorAll('td');
+        const rowData = Array.from(cells).map(cell => cell.textContent.trim());
+        body.push(rowData);
+    });
 
-            doc.autoTable({
-                head: headers,
-                body: body,
-                startY: 30,
-                theme: 'grid',
-                headStyles: {
-                    fillColor: [224, 224, 224],
-                    textColor: [0, 0, 0],
-                    fontStyle: 'bold'
-                },
-                bodyStyles: {
-                    textColor: [50, 50, 50],
-                },
-                styles: {
-                    fontSize: 12,
-                    cellPadding: 6,
-                    lineColor: [200, 200, 200],
-                    lineWidth: 0.5
-                }
-            });
+    // Add table to the PDF using autoTable
+    doc.autoTable({
+        head: headers,
+        body: body,
+        startY: 30,
+        theme: 'grid',
+        headStyles: {
+            fillColor: [224, 224, 224],
+            textColor: [0, 0, 0],
+            fontStyle: 'bold'
+        },
+        bodyStyles: {
+            textColor: [50, 50, 50],
+        },
+        styles: {
+            fontSize: 12,
+            cellPadding: 6,
+            lineColor: [200, 200, 200],
+            lineWidth: 0.5
+        }
+    });
 
-            doc.save(`student_slot_availability_${monthInput}.pdf`);
-        });
+    // Save the PDF
+    doc.save(`student_slot_availability_${monthInput}.pdf`);
+});
 
         function fetchData() {
-            const monthInput = document.getElementById("month").value;
-            if (!monthInput) {
-                alert("Please select a month.");
-                return;
+    const monthInput = document.getElementById("month").value;
+    if (!monthInput) {
+        alert("Please select a month.");
+        return;
+    }
+
+    const [year, month] = monthInput.split('-');
+    console.log("Month and Year:", month, year);  // Debugging log
+
+    fetch(`/api/slothostel2?month=${month}&year=${year}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log("API Response Data:", data);  // Debugging log
+            const tableBody = document.getElementById("results-table");
+            tableBody.innerHTML = '';  // Clear any existing data
+
+            data.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            data.forEach(row => {
+                let rowElement = document.createElement("tr");
+
+                const dateObj = new Date(row.date);
+                const day = String(dateObj.getDate()).padStart(2, '0');
+                const monthNum = String(dateObj.getMonth() + 1).padStart(2, '0');
+                const yearFull = dateObj.getFullYear();
+
+                const numericalDate = `${day}.${monthNum}.${yearFull}`;
+                const ordinalSuffix = getOrdinalSuffix(parseInt(day, 10));
+                const dayOfWeek = dateObj.toLocaleDateString('default', { weekday: 'long' });
+
+                const textualDate = `${dayOfWeek}`;
+
+                const morningClass = row.morning === 0 ? 'full' : row.morning <= 5 ? 'low-availability' : 'available';
+                const afternoonClass = row.afternoon === 0 ? 'full' : row.afternoon <= 5 ? 'low-availability' : 'available';
+                const eveningClass = row.evening === 0 ? 'full' : row.evening <= 5 ? 'low-availability' : 'available';
+                const nightClass = row.night === 0 ? 'full' : row.night <= 5 ? 'low-availability' : 'available';
+
+                rowElement.innerHTML = 
+                    `<td>${numericalDate}</td>
+                     <td>${textualDate}</td>
+                     <td class="${morningClass}">${row.morning}</td>
+                     <td class="${afternoonClass}">${row.afternoon}</td>
+                     <td class="${eveningClass}">${row.evening}</td>
+                     <td class="${nightClass}">${row.night}</td>`;
+
+                tableBody.appendChild(rowElement);
+            });
+        })
+        .catch(error => console.error('Error fetching slots data:', error));
+}
+
+        // Function to get ordinal suffix for the day (e.g., "1st", "2nd", "3rd")
+        function getOrdinalSuffix(day) {
+            if (day > 3 && day < 21) return 'th'; // Covers 11th-13th
+            switch (day % 10) {
+                case 1: return "st";
+                case 2: return "nd";
+                case 3: return "rd";
+                default: return "th";
             }
-
-            const [year, month] = monthInput.split('-');
-
-            fetch(`/api/slothostel2?month=${month}&year=${year}`)
-                .then(response => response.json())
-                .then(data => {
-                    const tableBody = document.getElementById("results-table");
-                    tableBody.innerHTML = '';  // Clear any existing data
-
-                    if (data.length === 0) {
-                        alert("No data available for the selected month.");
-                        return;
-                    }
-
-                    data.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-                    data.forEach(row => {
-                        let rowElement = document.createElement("tr");
-
-                        const dateObj = new Date(row.date);
-                        const day = String(dateObj.getDate()).padStart(2, '0');
-                        const monthNum = String(dateObj.getMonth() + 1).padStart(2, '0');
-                        const yearFull = dateObj.getFullYear();
-
-                        const numericalDate = `${day}.${monthNum}.${yearFull}`;
-                        const dayOfWeek = dateObj.toLocaleDateString('default', { weekday: 'long' });
-                        const textualDate = `${dayOfWeek}`;
-
-                        const morningClass = row.morning === 0 ? 'full' : row.morning <= 10 ? 'low-availability' : 'available';
-                        const afternoonClass = row.afternoon === 0 ? 'full' : row.afternoon <= 10 ? 'low-availability' : 'available';
-                        const eveningClass = row.evening === 0 ? 'full' : row.evening <= 10 ? 'low-availability' : 'available';
-                        const nightClass = row.night === 0 ? 'full' : row.night <= 10 ? 'low-availability' : 'available';
-
-                        rowElement.innerHTML = `
-                            <td>${numericalDate}</td>
-                            <td>${textualDate}</td>
-                            <td class="${morningClass}">${row.morning}</td>
-                            <td class="${afternoonClass}">${row.afternoon}</td>
-                            <td class="${eveningClass}">${row.evening}</td>
-                            <td class="${nightClass}">${row.night}</td>
-                        `;
-
-                        tableBody.appendChild(rowElement);
-                    });
-                })
-                .catch(error => console.error('Error fetching data:', error));
         }
     </script>
 </body>
